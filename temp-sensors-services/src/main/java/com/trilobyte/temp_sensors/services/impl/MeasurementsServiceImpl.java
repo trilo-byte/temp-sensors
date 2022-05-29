@@ -2,9 +2,12 @@ package com.trilobyte.temp_sensors.services.impl;
 
 import com.trilobyte.temp_sensors.dto.ComputeReqDto;
 import com.trilobyte.temp_sensors.dto.ComputeResDto;
+import com.trilobyte.temp_sensors.exceptions.ApplicationException;
+import com.trilobyte.temp_sensors.exceptions.MeasureBadRequestException;
 import com.trilobyte.temp_sensors.model.Measure;
 import com.trilobyte.temp_sensors.services.MeasurementsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +19,11 @@ public class MeasurementsServiceImpl implements MeasurementsService {
     @Override
     public ComputeResDto compute(ComputeReqDto dto) {
 
+        if(dto.getReadings() == null) {
+            throw new MeasureBadRequestException("The request is malformed");
+        }
         List<Measure> measures = new ArrayList<>();
+
         for (int i = 0; i < dto.getReadings().size(); i++) {
             Measure measure = new Measure(dto.getReadings().get(i), Integer.valueOf(i));
             measures.add(measure);

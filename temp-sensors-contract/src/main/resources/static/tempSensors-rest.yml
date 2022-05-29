@@ -6,6 +6,9 @@ info:
   contact:
     name: Antonio Otero Andria
     email: a.otero.andria@gmail.com
+servers:
+  - url: 'http://localhost:8080/v2/stats'
+    description: Generated server url
 tags:
   - name: TempSensors
 paths:
