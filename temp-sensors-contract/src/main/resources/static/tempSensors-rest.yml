@@ -1,0 +1,110 @@
+openapi: 3.0.1
+info:
+  title: TempSensors API
+  description: API to be consumed as part of a challenge
+  version: 1.0.0
+  contact:
+    name: Antonio Otero Andria
+    email: a.otero.andria@gmail.com
+tags:
+  - name: TempSensors
+paths:
+  /compute:
+    post:
+      tags:
+        - measurements
+      summary: returns the highest increment from some values
+      description: It processes a list of measurements and return the highest measure increment
+      operationId: compute
+      requestBody:
+        description: The body with the list of values
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComputeReq'
+            examples:
+              example-1:
+                value:
+                  readings: [1, 3, 2, 4]
+              example-2:
+                value:
+                  readings: [10, 15, 18, 1, 8]
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputeRes'
+              examples:
+                example-1:
+                  value:
+                    increment: 3
+                example-2:
+                  value:
+                    increment: 8
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: UUID of this error
+          format: uuid
+          example: 4c3a5767-4973-44b0-a9c2-b8cf1b34373a
+          readOnly: true
+        method:
+          type: string
+          example: GET
+          description: HTTP method with which this request was made
+          readOnly: true
+        path:
+          type: string
+          format: uri-reference
+          example: /movies
+          description: Path of this request
+          readOnly: true
+        status:
+          type: integer
+          example: 500
+          format: int32
+          description: Https status code
+          readOnly: true
+        description:
+          type: string
+          example: 'An error occurred when updating a movie. Please try again later, and if the problem persists, contact the customer services department'
+          description: Message with the error explained
+      required:
+        - uuid
+        - status
+        - description
+    ComputeReq:
+      type: object
+      description: The request
+      properties:
+        readings:
+          type: array
+          description: The list of values to be computed
+          items:
+            type: integer
+            format: int32
+          example: [1, 3, 2, 4]
+    ComputeRes:
+      type: object
+      description: The response of the operation
+      properties:
+        increment:
+          type: integer
+          format: int32
+          description: the highest increment
+          example: 3
