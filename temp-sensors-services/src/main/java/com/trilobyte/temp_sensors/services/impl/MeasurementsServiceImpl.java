@@ -43,10 +43,8 @@ public class MeasurementsServiceImpl implements MeasurementsService {
             result = 0;
         }
 
-        Collections.sort(partialIncrements);
-        Collections.reverse(partialIncrements);
         ComputeResDto resDto = new ComputeResDto();
-        resDto.setIncrement(partialIncrements.get(0));
+        resDto.setIncrement(Collections.max(partialIncrements));
         return resDto;
     }
 }
